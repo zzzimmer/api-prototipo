@@ -10,4 +10,6 @@ public interface EventoRepository extends JpaRepository<Evento, Long> {
 
     @Query(" SELECT e FROM Evento e WHERE e.responsavel.id = :idUsuario ")
     List<Evento> findAllByUsuarioId(Long idUsuario);
+
+    Evento findById(long id);
 }

@@ -10,24 +10,28 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
-import org.zzzimmer.apiprototipo.dto.CadastroUsuarioDTO;
-import org.zzzimmer.apiprototipo.dto.CriarEventoDTO;
-import org.zzzimmer.apiprototipo.dto.DetalhesEventoDTO;
+import org.zzzimmer.apiprototipo.dto.*;
 import org.zzzimmer.apiprototipo.model.Evento;
 import org.zzzimmer.apiprototipo.model.Usuario;
 import org.zzzimmer.apiprototipo.repository.EventoRepository;
 import org.zzzimmer.apiprototipo.repository.UsuarioRepository;
+import org.zzzimmer.apiprototipo.service.EventoService;
 import org.zzzimmer.apiprototipo.service.UsuarioService;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/usuario")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*", methods = {RequestMethod.OPTIONS, RequestMethod.GET
+        , RequestMethod.PUT, RequestMethod.POST})
 public class UsuarioController {
 
     @Autowired
     private UsuarioService usuarioService;
+
+    @Autowired
+    private EventoService eventoService;
 
     @Autowired
     private UsuarioRepository usuarioRepository;
@@ -37,6 +41,7 @@ public class UsuarioController {
     @GetMapping
     public ResponseEntity<Page<CadastroUsuarioDTO>> listar(@PageableDefault(size = 10, sort = {"nomeCompleto"}) Pageable paginacao) {
 
+//        var page = usuarioService.findAll(paginacao)
             var page = usuarioRepository.findAll(paginacao).map(CadastroUsuarioDTO::new);
 
             return ResponseEntity.ok(page);
@@ -88,12 +93,39 @@ public class UsuarioController {
     public ResponseEntity<List<DetalhesEventoDTO>> eventosCriadosPorUser(@PathVariable Long idUsuario){
         List<Evento> listaEventos = eventoRepository.findAllByUsuarioId(idUsuario);
 
-        //todo implementar otimização aqui para treinar/conhecer
+        //todo implementar otimização de projeção de DTO aqui para treinar/conhecer
         List<DetalhesEventoDTO> dtos = listaEventos.stream()
                 .map(DetalhesEventoDTO::new).toList();
 
         return ResponseEntity.ok(dtos);
     }
+
+//    @GetMapping ("/eventos/{idEvento}")
+//    public ResponseEntity<DetalhesEventoDTO> eventoEspecifico(@PathVariable Long idEvento){
+//
+//        Optional<Evento> objevento = eventoRepository.findById(idEvento);
+//
+////        objevento.map(DetalhesEventoDTO::new);
+//
+//        DetalhesEventoDTO evento = new DetalhesEventoDTO(objevento);
+//
+//        return ResponseEntity.ok(evento);
+//    }
+
+        @GetMapping("/eventos/{idEvento}")
+        public ResponseEntity<DetalhesEventoDTO> eventoEspecifico(@PathVariable Long idEvento) {
+        return ResponseEntity.of(
+            eventoRepository.findById(idEvento)
+                    .map(DetalhesEventoDTO::new)
+            );
+        }
+
+        @PutMapping("/eventos/{eventoAtualId}/convidar")
+        public ResponseEntity<EmailDTO> convidarEmail (@PathVariable Long eventoAtualId, @RequestBody @Valid EmailDTO dto){
+            String email = dto.email();
+            eventoService.adicionarConvidado(eventoAtualId,email);
+            return ResponseEntity.ok(dto);
+        }
 
 
 }

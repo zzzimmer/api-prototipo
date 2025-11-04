@@ -7,8 +7,4 @@ import org.zzzimmer.apiprototipo.model.Usuario;
 @Service
 public class UsuarioService {
 
-    public Usuario criarUsuario(){
-        Usuario usuarioTeste = new Usuario();
-        return usuarioTeste;
-    }
 }
