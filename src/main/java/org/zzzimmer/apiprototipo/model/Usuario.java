@@ -23,7 +23,7 @@ public class Usuario {
     private String email;
     private String numeroCelular;
 
-    @OneToMany(mappedBy = "responsavel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Evento> eventoList = new ArrayList<>();
 
     public Usuario(CadastroUsuarioDTO dados){
@@ -37,7 +37,7 @@ public class Usuario {
         Evento eventoA = new Evento();
         this.eventoList.add(eventoA);
         eventoA.setAtivo(true);
-        eventoA.setResponsavel(this);
+        eventoA.setUsuario(this);
         eventoA.setName("Primavera Soundss");
     }
 

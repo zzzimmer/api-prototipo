@@ -26,10 +26,10 @@ public class Evento {
     private String name;
     private LocalDate data;
     private LocalTime horario;
+    private String local;
     private Boolean ativo;
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "usuario_id") // Nome da coluna da chave estrangeira na tabela de eventos
-    private Usuario responsavel;
+    private Usuario usuario;
 
     @OneToMany(mappedBy = "evento", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Convite> conviteList = new ArrayList<>();

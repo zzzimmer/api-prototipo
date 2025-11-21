@@ -14,7 +14,8 @@ public record DetalhesEventoDTO(
         LocalDate data,
         LocalTime horario,
         Boolean ativo,
-        DetalhesUsuarioDTO responsavel,
+        String local,
+        DetalhesUsuarioDTO usuario,
         List<String> convidados // lista dos e-mails ao buscar detalhes do evento
 ) {
 
@@ -25,7 +26,8 @@ public record DetalhesEventoDTO(
                 evento.getData(),
                 evento.getHorario(),
                 evento.getAtivo(),
-                new DetalhesUsuarioDTO(evento.getResponsavel()),
+                evento.getLocal(),
+                new DetalhesUsuarioDTO(evento.getUsuario()),
                 evento.getConviteList().stream().map(convite -> convite.getEmailConvidado())
                         .collect(Collectors.toList())
         );

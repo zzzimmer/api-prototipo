@@ -65,28 +65,14 @@ public class UsuarioController {
         var usuario = usuarioRepository.findById(idUsuario)
                 .orElseThrow(() -> new EntityNotFoundException("Usuario não encontrado"));
 
-        // criar entidade evento a partir do DTO
         var evento = new Evento(dados);
-        evento.setResponsavel(usuario);
-
-
-        //ja cria os convites a partir de uma lista fornecida. Pode ser assim no front-end, cada evento ter no minimo um convidado
-//        if (dados.emailsConvidados() != null && !dados.emailsConvidados().isEmpty()) {
-//            dados.emailsConvidados().forEach(email -> {
-//                var novoConvite = new Convite();
-//                novoConvite.setEmailConvidado(email);
-//                novoConvite.setEvento(evento); // Associa o convite ao evento
-//                // Aqui você pode gerar e setar o 'codigoAutenticador'
-//                evento.getConviteList().add(novoConvite);
-//            });
-//        }
+        evento.setUsuario(usuario);
 
         eventoRepository.save(evento);
 
         var uri = uriBuilder.path("/eventos/{id}").buildAndExpand(evento.getId()).toUri();
 
         return ResponseEntity.created(uri).body(new DetalhesEventoDTO(evento));
-//        return ResponseEntity.created(uri).body(evento); //além de errado trazer o evento, da recursão infinita
     }
 
     @GetMapping ("{idUsuario}/eventos")
@@ -100,32 +86,19 @@ public class UsuarioController {
         return ResponseEntity.ok(dtos);
     }
 
-//    @GetMapping ("/eventos/{idEvento}")
-//    public ResponseEntity<DetalhesEventoDTO> eventoEspecifico(@PathVariable Long idEvento){
-//
-//        Optional<Evento> objevento = eventoRepository.findById(idEvento);
-//
-////        objevento.map(DetalhesEventoDTO::new);
-//
-//        DetalhesEventoDTO evento = new DetalhesEventoDTO(objevento);
-//
-//        return ResponseEntity.ok(evento);
-//    }
-
-        @GetMapping("/eventos/{idEvento}")
-        public ResponseEntity<DetalhesEventoDTO> eventoEspecifico(@PathVariable Long idEvento) {
+    @GetMapping("/eventos/{idEvento}")
+    public ResponseEntity<DetalhesEventoDTO> eventoEspecifico(@PathVariable Long idEvento) {
         return ResponseEntity.of(
             eventoRepository.findById(idEvento)
                     .map(DetalhesEventoDTO::new)
             );
-        }
+    }
 
-        @PutMapping("/eventos/{eventoAtualId}/convidar")
-        public ResponseEntity<EmailDTO> convidarEmail (@PathVariable Long eventoAtualId, @RequestBody @Valid EmailDTO dto){
-            String email = dto.email();
-            eventoService.adicionarConvidado(eventoAtualId,email);
-            return ResponseEntity.ok(dto);
-        }
-
+    @PutMapping("/eventos/{eventoAtualId}/convidar")
+    public ResponseEntity<EmailDTO> convidarEmail (@PathVariable Long eventoAtualId, @RequestBody @Valid EmailDTO dto){
+        String email = dto.email();
+        eventoService.adicionarConvidado(eventoAtualId,email);
+        return ResponseEntity.ok(dto);
+    }
 
 }

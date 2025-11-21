@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface EventoRepository extends JpaRepository<Evento, Long> {
 
-    @Query(" SELECT e FROM Evento e WHERE e.responsavel.id = :idUsuario ")
+    @Query(" SELECT e FROM Evento e WHERE e.usuario.id = :idUsuario ")
     List<Evento> findAllByUsuarioId(Long idUsuario);
 
     Evento findById(long id);
