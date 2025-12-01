@@ -1,10 +1,13 @@
 package org.zzzimmer.apiprototipo.dto;
 
+import org.zzzimmer.apiprototipo.model.Convite;
 import org.zzzimmer.apiprototipo.model.Evento;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -16,7 +19,8 @@ public record DetalhesEventoDTO(
         Boolean ativo,
         String local,
         DetalhesUsuarioDTO usuario,
-        List<String> convidados // lista dos e-mails ao buscar detalhes do evento
+//        List<String> convidados
+        Map<String, LocalDate> mailDoConvidado_dataConvite// lista dos e-mails ao buscar detalhes do evento
 ) {
 
     public DetalhesEventoDTO(Evento evento){
@@ -28,8 +32,13 @@ public record DetalhesEventoDTO(
                 evento.getAtivo(),
                 evento.getLocal(),
                 new DetalhesUsuarioDTO(evento.getUsuario()),
-                evento.getConviteList().stream().map(convite -> convite.getEmailConvidado())
-                        .collect(Collectors.toList())
-        );
+                evento.getConviteList().stream().collect(Collectors.toMap(
+                        Convite::getEmailConvidado,
+                        Convite::getDataConvite
+                )));
+
+//                evento.getConviteList().stream().map(convite -> convite.getEmailConvidado())
+//                        .collect(Collectors.toList())
+
     }
 }

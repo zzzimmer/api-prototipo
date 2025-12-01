@@ -6,6 +6,8 @@ import org.zzzimmer.apiprototipo.model.Convite;
 import org.zzzimmer.apiprototipo.model.Evento;
 import org.zzzimmer.apiprototipo.repository.EventoRepository;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,6 +39,7 @@ public Convite gerarConvite(String email, Evento evento){
     convite.setCodigoAutenticador(autenticador);
     convite.setEmailConvidado(email);
     convite.setEvento(evento);
+    convite.setDataConvite(LocalDate.now(ZoneId.of("UTC")));
 
     return convite;
 }

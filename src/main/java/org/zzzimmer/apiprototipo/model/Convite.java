@@ -3,6 +3,8 @@ package org.zzzimmer.apiprototipo.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Entity(name = "Convite")
 @Table(name = "convites")
 @Getter
@@ -15,6 +17,7 @@ public class Convite {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    private LocalDate dataConvite;
 
     private long codigoAutenticador;
     private String emailConvidado;
