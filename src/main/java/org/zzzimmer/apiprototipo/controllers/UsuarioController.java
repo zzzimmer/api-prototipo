@@ -47,7 +47,7 @@ public class UsuarioController {
             return ResponseEntity.ok(page);
     }
 
-    @PostMapping
+    @PostMapping// criar conta de USUARIO -> Organizador
     public ResponseEntity cadastrar(@RequestBody @Valid CadastroUsuarioDTO dados, UriComponentsBuilder uriBuilder) {
         var usuario = new Usuario(dados);
 

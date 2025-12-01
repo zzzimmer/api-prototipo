@@ -18,6 +18,7 @@ public record CriarEventoDTO(
         LocalDate data,
         @NotNull
         LocalTime horario,
+        String local,
 //        Boolean ativo,
 //        Usuario responsavel,
         List<String> conviteList

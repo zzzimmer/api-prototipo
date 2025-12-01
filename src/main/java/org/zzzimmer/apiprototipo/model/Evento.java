@@ -38,6 +38,7 @@ public class Evento {
         this.name = dados.name();
         this.data = dados.data();
         this.horario = dados.horario();
+        this.local = dados.local();
         this.ativo = true;
     }
 }
