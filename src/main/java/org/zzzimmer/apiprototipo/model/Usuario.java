@@ -22,6 +22,7 @@ public class Usuario {
     private String nomeCompleto;
     private String email;
     private String numeroCelular;
+    private String password;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Evento> eventoList = new ArrayList<>();
