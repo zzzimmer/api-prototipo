@@ -1,4 +1,4 @@
-package org.zzzimmer.apiprototipo.controllers;
+package org.zzzimmer.apiprototipo.controllers.login;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

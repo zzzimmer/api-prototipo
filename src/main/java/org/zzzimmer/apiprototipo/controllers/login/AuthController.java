@@ -1,4 +1,4 @@
-package org.zzzimmer.apiprototipo.controllers;
+package org.zzzimmer.apiprototipo.controllers.login;
 
 
 import lombok.RequiredArgsConstructor;

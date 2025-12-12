@@ -4,10 +4,8 @@ package org.zzzimmer.apiprototipo.controllers;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.zzzimmer.apiprototipo.dto.*;
@@ -19,7 +17,6 @@ import org.zzzimmer.apiprototipo.service.EventoService;
 import org.zzzimmer.apiprototipo.service.UsuarioService;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/usuario")
@@ -38,46 +35,22 @@ public class UsuarioController {
     @Autowired
     private EventoRepository eventoRepository;
 
-    @GetMapping
-    public ResponseEntity<Page<CadastroUsuarioDTO>> listar(@PageableDefault(size = 10, sort = {"nomeCompleto"}) Pageable paginacao) {
-
-//        var page = usuarioService.findAll(paginacao)
-            var page = usuarioRepository.findAll(paginacao).map(CadastroUsuarioDTO::new);
-
-            return ResponseEntity.ok(page);
-    }
-
-    @PostMapping// criar conta de USUARIO -> Organizador
-    public ResponseEntity cadastrar(@RequestBody @Valid CadastroUsuarioDTO dados, UriComponentsBuilder uriBuilder) {
-        var usuario = new Usuario(dados);
-
-        usuarioRepository.save(usuario);
-
-        var uri = uriBuilder.path("/{id}").buildAndExpand(usuario.getId()).toUri();
-        return ResponseEntity.created(uri).body(usuario);
-    }
-
-
-//    cria evento
-    @PostMapping("{idUsuario}/eventos")
-    public ResponseEntity criarEvento(@PathVariable Long idUsuario, @RequestBody @Valid CriarEventoDTO dados, UriComponentsBuilder uriBuilder){
-        //buscar o responsável pelo evento
-        var usuario = usuarioRepository.findById(idUsuario)
-                .orElseThrow(() -> new EntityNotFoundException("Usuario não encontrado"));
+    @PostMapping("/criar-evento")
+    public ResponseEntity criarEvento(@AuthenticationPrincipal Usuario usuario, @RequestBody @Valid CriarEventoDTO dados, UriComponentsBuilder uriBuilder){
 
         var evento = new Evento(dados);
         evento.setUsuario(usuario);
 
         eventoRepository.save(evento);
 
-        var uri = uriBuilder.path("/eventos/{id}").buildAndExpand(evento.getId()).toUri();
+        var uri = uriBuilder.path("/usuario/eventos/{id}").buildAndExpand(evento.getId()).toUri();
 
         return ResponseEntity.created(uri).body(new DetalhesEventoDTO(evento));
     }
 
-    @GetMapping ("{idUsuario}/eventos")
-    public ResponseEntity<List<DetalhesEventoDTO>> eventosCriadosPorUser(@PathVariable Long idUsuario){
-        List<Evento> listaEventos = eventoRepository.findAllByUsuarioId(idUsuario);
+    @GetMapping ("/meus-eventos")
+    public ResponseEntity<List<DetalhesEventoDTO>> eventosCriadosPorUser(@AuthenticationPrincipal Usuario usuario){
+        List<Evento> listaEventos = eventoRepository.findAllByUsuarioId(usuario.getId());
 
         //todo implementar otimização de projeção de DTO aqui para treinar/conhecer
         List<DetalhesEventoDTO> dtos = listaEventos.stream()
@@ -87,12 +60,13 @@ public class UsuarioController {
     }
 
     @GetMapping("/eventos/{idEvento}")
-    public ResponseEntity<DetalhesEventoDTO> eventoEspecifico(@PathVariable Long idEvento) {
+    public ResponseEntity<DetalhesEventoDTO> eventoEspecifico(@PathVariable Long idEvento, @AuthenticationPrincipal Usuario usuario) {
         return ResponseEntity.of(
-            eventoRepository.findById(idEvento)
+            eventoRepository.findByIdAndUsuarioId(idEvento, usuario.getId())
                     .map(DetalhesEventoDTO::new)
             );
     }
+
 
     @PutMapping("/eventos/{eventoAtualId}/convidar")
     public ResponseEntity<EmailDTO> convidarEmail (@PathVariable Long eventoAtualId, @RequestBody @Valid EmailDTO dto){
