@@ -13,36 +13,40 @@ import java.util.stream.Collectors;
 @Service
 public class EventoService {
 
-@Autowired
-private EventoRepository eventoRepository;
+    @Autowired
+    private EventoRepository eventoRepository;
 
-public void adicionarConvidado(Long id, String email){
+    @Autowired
+    private EmailService emailService;
 
-    Evento evento = eventoRepository.findById(id).orElseThrow();
+    public void adicionarConvidado(Long id, String email) {
 
-    evento.getConviteList().add(gerarConvite(email, evento));
+        Evento evento = eventoRepository.findById(id).orElseThrow();
 
-    eventoRepository.save(evento);
+        evento.getConviteList().add(gerarConvite(email, evento));
+        emailService.enviarEmailConvite(email, evento);
 
-}
+        eventoRepository.save(evento);
 
-public Long gerarNumeroAleatorio() {
+    }
+
+    public Long gerarNumeroAleatorio() {
         return 1000L + (long) (Math.random() * 9000);
     }
 
-public Convite gerarConvite(String email, Evento evento){
+    public Convite gerarConvite(String email, Evento evento) {
 
-    Long autenticador = gerarNumeroAleatorio();
+        Long autenticador = gerarNumeroAleatorio();
 
-    Convite convite = new Convite();
+        Convite convite = new Convite();
 
-    convite.setCodigoAutenticador(autenticador);
-    convite.setEmailConvidado(email);
-    convite.setEvento(evento);
-    convite.setDataConvite(LocalDate.now(ZoneId.of("UTC")));
+        convite.setCodigoAutenticador(autenticador);
+        convite.setEmailConvidado(email);
+        convite.setEvento(evento);
+        convite.setDataConvite(LocalDate.now(ZoneId.of("UTC")));
 
-    return convite;
-}
+        return convite;
+    }
 
 
 }
