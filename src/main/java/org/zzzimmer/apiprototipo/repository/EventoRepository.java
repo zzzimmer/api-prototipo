@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.zzzimmer.apiprototipo.model.Evento;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface EventoRepository extends JpaRepository<Evento, Long> {
 
@@ -12,4 +13,6 @@ public interface EventoRepository extends JpaRepository<Evento, Long> {
     List<Evento> findAllByUsuarioId(Long idUsuario);
 
     Evento findById(long id);
+
+    Optional<Evento> findByIdAndUsuarioId(Long id, Long usuarioId);
 }
