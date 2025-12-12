@@ -1,11 +1,13 @@
 package org.zzzimmer.apiprototipo.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.time.LocalDate;
 
-@Entity(name = "Convite")
+@Entity
 @Table(name = "convites")
 @Getter
 @Setter
@@ -20,6 +22,8 @@ public class Convite {
     private LocalDate dataConvite;
 
     private long codigoAutenticador;
+    @NotNull(message = "email do convidado é obrigatório")
+    @Size(max = 200, message = "Muitos caracteres.")
     private String emailConvidado;
 
     @ManyToOne(fetch = FetchType.LAZY)
