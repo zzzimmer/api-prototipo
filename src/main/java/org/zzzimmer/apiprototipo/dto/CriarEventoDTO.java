@@ -16,11 +16,11 @@ public record CriarEventoDTO(
         @Size(max = 200, message = "Muitos caracteres.")
         String name,
         @NotNull(message = "Data é obrigatório")
-        @Size(max = 200, message = "Muitos caracteres.")
+//        @Size(max = 200, message = "Muitos caracteres.")
         @FutureOrPresent
         LocalDate data,
         @NotNull(message = "Horario é obrigatório")
-        @Size(max = 10, message = "Muitos caracteres.")
+//        @Size(max = 10, message = "Muitos caracteres.")
         LocalTime horario,
         @NotNull(message = "Local é obrigatório")
         @Size(max = 200, message = "Muitos caracteres.")

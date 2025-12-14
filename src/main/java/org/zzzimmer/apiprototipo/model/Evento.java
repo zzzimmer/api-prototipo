@@ -31,13 +31,13 @@ public class Evento {
     @Size(max = 200, message = "Muitos caracteres.")
     private String name;
     @NotNull(message = "Data é obrigatório")
-    @Size(max = 200, message = "Muitos caracteres.")
+//    @Size(max = 200, message = "Muitos caracteres.")
     @FutureOrPresent
     //essa notação imagino que precisa ficar atento devido a forma de funcionamento(nao fui verificar).
     // Se o servidor tiver um fuso diferente do local da aplicação, pode dar um ruim
     private LocalDate data;
     @NotNull(message = "Horario é obrigatório")
-    @Size(max = 10, message = "Muitos caracteres.")
+//    @Size(max = 10, message = "Muitos caracteres.")
     private LocalTime horario;
     @NotNull(message = "Local é obrigatório")
     @Size(max = 200, message = "Muitos caracteres.")
