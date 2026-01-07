@@ -3,10 +3,15 @@
 ## Descrição:
 A API fornece endpoints criados para alimentar um sistema de gerenciamento de eventos voltado exclusivamente para organizadores. 
 Com essa ferramenta, é possível:
+
 1 - Criar eventos 
+
 2 - Visualizar eventos criados
+
 3 - Visualizar lista de convidados para um evento
+
 4 - Adicionar um convidado ao evento e enviar este convite por e-mail
+
 
 ### Especificações:
 - Java 17
@@ -36,11 +41,17 @@ Com essa ferramenta, é possível:
 ## Endpoints:
 Endereço padrão: http://localhost:8080/usuario
 
-1. /criar-evento
+### /criar-evento
+
 Descrição: Retorna informações da versão da API e dados de produção
+
 Método: POST
+
 URL: http://localhost:8080/usuario/criar-evento
+
 Resposta: JSON -> DetalhesEventoDTO
+
+--------------------------------------------------------------------
 
 ## Entidades:
 
